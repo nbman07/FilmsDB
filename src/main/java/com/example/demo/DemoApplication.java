@@ -3,12 +3,10 @@ package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @SpringBootApplication
@@ -94,6 +92,16 @@ public class DemoApplication {
         return filmRepo.findFilmsByCategory(categoryName);
     }
 
+    //Find films based on an actor
+    @GetMapping("actor/{id}/films")
+    public List<FilmDTO> findFilmsByActor(@PathVariable("id") int actorID) {
+        final Actor actor = actorRepo.findById(actorID).orElseThrow(() -> new ResourceAccessException("Actor not found with id: " + actorID));
+
+        ActorDTO actorDTO = new ActorDTO(actor);
+//        return (Iterable<ActorDTO>) ResponseEntity.ok(actorDTO);
+        return actorDTO.getFilms();
+    }
+
     /******* CATEGORY *******/
 
     // Find all categories
@@ -106,6 +114,11 @@ public class DemoApplication {
     @GetMapping("/category/{name}")
     public Category findCategoryByName(@PathVariable("name") String categoryName) {
         return categoryRepo.findCategoryByCategoryName(categoryName);
+    }
+    // Find category based on ID
+    @GetMapping("/category/id={id}")
+    public Category findCategoryByID(@PathVariable("id") int categoryID) {
+        return categoryRepo.findCategoryByCategoryID(categoryID);
     }
 
 

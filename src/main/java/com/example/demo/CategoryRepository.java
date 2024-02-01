@@ -8,4 +8,5 @@ import java.util.Set;
 
 public interface CategoryRepository extends JpaRepository<Category,Integer> {
     Category findCategoryByCategoryName(String categoryName);
+    Category findCategoryByCategoryID(int categoryID);
 }
