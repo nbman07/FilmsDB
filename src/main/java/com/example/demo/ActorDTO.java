@@ -27,6 +27,10 @@ public class ActorDTO {
         return films;
     }
 
+    public void setFilms(List<FilmDTO> films) {
+        this.films = films;
+    }
+
     private List<FilmDTO> films = new ArrayList<>();
 
     public ActorDTO() {
@@ -36,7 +40,7 @@ public class ActorDTO {
         this.firstName = actor.getFirstName();
         this.lastName = actor.getLastName();
         for (Film film : actor.getFilmsStarringActor()) {
-            FilmDTO filmDTO = new FilmDTO();
+            FilmDTO filmDTO = new FilmDTO(film, "a");
             filmDTO.setTitle(film.getTitle());
             films.add(filmDTO);
         }

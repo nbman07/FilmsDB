@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -107,14 +108,22 @@ public class Film {
     @ManyToMany(mappedBy = "filmsStarringActor")
     Set<Actor> actorsStarringInFilm;
 
-    @ManyToMany(mappedBy = "filmCategories")
+    public void setCategoriesOfFilms(Set<Category> categoriesOfFilms) {
+        this.categoriesOfFilms = categoriesOfFilms;
+    }
+
+    @ManyToMany(mappedBy = "filmsOfCategory")
     Set<Category> categoriesOfFilms;
+
+    public void setActorsStarringInFilm(Set<Actor> actorsStarringInFilm) {
+        this.actorsStarringInFilm = actorsStarringInFilm;
+    }
 
     public Set<Actor> getActorsStarringInFilm() {
         return actorsStarringInFilm;
     }
 
-    public Set<Category> getFilmCategories() {
+    public Set<Category> getCategoriesOfFilms() {
         return categoriesOfFilms;
     }
 }

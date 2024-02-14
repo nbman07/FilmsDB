@@ -34,15 +34,19 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public Set<Film> getFilmCategories() {
-        return filmCategories;
+    public void setFilmCategories(Set<Film> filmsOfCategory) {
+        this.filmsOfCategory = filmsOfCategory;
+    }
+
+    public Set<Film> getFilmsOfCategory() {
+        return filmsOfCategory;
     }
 
     @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "film_category",
-            joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Film> filmCategories;
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id"))
+    Set<Film> filmsOfCategory;
 }

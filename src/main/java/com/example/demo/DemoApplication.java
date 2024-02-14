@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,9 @@ public class DemoApplication {
 
     @Autowired
     private ActorRepository actorRepo;
+    @Autowired
     private FilmRepository filmRepo;
+    @Autowired
     private CategoryRepository categoryRepo;
 
     public DemoApplication(ActorRepository actorRepo, FilmRepository filmRepo, CategoryRepository categoryRepo) {
@@ -65,6 +68,15 @@ public class DemoApplication {
         return actorRepo.findByFirstNameOrLastNameContaining(match);
     }
 
+    // Find actors based on given film
+    @GetMapping("film/{id}/actors")
+    public List<ActorDTO> findActorsByFilm(@PathVariable("id") int filmID) {
+        final Film film = filmRepo.findById(filmID).orElseThrow(()->new ResourceAccessException("Film not found with id: "+ filmID));
+
+        FilmDTO filmDTO = new FilmDTO(film, "a");
+
+        return filmDTO.actors;
+    }
     /*******  FILM *******/
 
     // Find all films
@@ -87,9 +99,12 @@ public class DemoApplication {
     }
 
     // Find films based on category given
-    @GetMapping("/category/{name}/films")
-    public Set<Film> findFilmsByCategory(@PathVariable("name") String categoryName) {
-        return filmRepo.findFilmsByCategory(categoryName);
+    @GetMapping("/category/{id}/films")
+    public List<FilmDTO> findFilmsByCategory(@PathVariable("id") int categoryID) {
+        final Category category = categoryRepo.findById(categoryID).orElseThrow(()->new ResourceAccessException("Category not found with id: "+categoryID));
+
+        CategoryDTO categoryDTO = new CategoryDTO(category);
+        return categoryDTO.getFilms();
     }
 
     //Find films based on an actor
@@ -121,6 +136,14 @@ public class DemoApplication {
         return categoryRepo.findCategoryByCategoryID(categoryID);
     }
 
+    // Find category/categories of a film
+    @GetMapping("/film/{id}/categories")
+    public List<CategoryDTO> findCategoriesByFilm(@PathVariable("id") int filmID) {
+        final Film film = filmRepo.findById(filmID).orElseThrow(()->new ResourceAccessException("Film not found with id: " + filmID));
+
+        FilmDTO filmDTO = new FilmDTO(film,"c");
+        return filmDTO.getCategories();
+    }
 
     /******* POST MAPPING *******/
 
@@ -128,7 +151,7 @@ public class DemoApplication {
 
     // Add a new actor
     @PostMapping("add/actor")
-    public Actor addActor(@RequestBody Actor actor) {
+    public Actor addNewActor(@RequestBody Actor actor) {
         return actorRepo.save(actor);
     }
 
@@ -136,15 +159,77 @@ public class DemoApplication {
 
     // Add a new film
     @PostMapping("add/film")
-    public Film addFilm(@RequestBody Film newFilm) {
+    public Film addNewFilm(@RequestBody Film newFilm) {
         return filmRepo.save(newFilm);
     }
 
     /******* CATEGORY *******/
     // Add a new category
     @PostMapping("add/category")
-    public Category addCategory(@RequestBody Category newCategory) {
+    public Category addNewCategory(@RequestBody Category newCategory) {
         return categoryRepo.save(newCategory);
+    }
+
+    // Add a category to a film and add film to a category
+    @PostMapping("film/{filmID}/addCategory/{categoryID}")
+    public void addCategoryToFilm(@PathVariable("filmID") int filmID, @PathVariable("categoryID") int categoryID) {
+        Category category = categoryRepo.findCategoryByCategoryID(categoryID);
+        Film film = filmRepo.findById(filmID).orElseThrow(()->new ResourceAccessException("Film not found with id: "+filmID));
+        Set<Category> newListOfCategories;
+        try {
+            newListOfCategories = film.getCategoriesOfFilms();
+        }catch (Exception e) {
+            System.out.println("List is null.");
+            newListOfCategories = new HashSet<Category>();
+        }
+        newListOfCategories.add(category);
+        film.setCategoriesOfFilms(newListOfCategories);
+
+        filmRepo.save(film);
+
+        Set<Film> newListOfFilms;
+        try {
+
+        newListOfFilms = category.getFilmsOfCategory();
+        } catch (Exception e) {
+            System.out.println("List is null.");
+            newListOfFilms = new HashSet<Film>();
+        }
+        newListOfFilms.add(film);
+        category.setFilmCategories(newListOfFilms);
+
+        categoryRepo.save(category);
+    }
+    // Add an actor to a film -> add a film to an actor
+    @PostMapping("film/{filmID}/addActor/{actorID}")
+    public void addActorToFilm(@PathVariable("filmID") int filmID, @PathVariable("actorID") int actorID) {
+        Actor actor = actorRepo.findById(actorID).orElseThrow(()-> new ResourceAccessException("Actor not found with id: "+actorID));
+        Film film = filmRepo.findById(filmID).orElseThrow(()->new ResourceAccessException("Film not found with id: "+filmID));
+        Set<Actor> newListOfActors;
+        try {
+            newListOfActors = film.getActorsStarringInFilm();
+        }catch (Exception e) {
+            System.out.println("List is null.");
+            newListOfActors = new HashSet<Actor>();
+        }
+        newListOfActors.add(actor);
+        film.setActorsStarringInFilm(newListOfActors);
+
+        filmRepo.save(film);
+
+        Set<Film> newListOfFilms;
+        try {
+
+            newListOfFilms = actor.getFilmsStarringActor();
+        } catch (Exception e) {
+            System.out.println("List is null.");
+            newListOfFilms = new HashSet<Film>();
+        }
+        newListOfFilms.add(film);
+//        actor.setActorID(205);
+        actor.setFilmsStarringActor(newListOfFilms);
+
+        actorRepo.save(actor);
     }
 
     /******* PUT MAPPING *******/
