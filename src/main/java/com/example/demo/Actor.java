@@ -3,6 +3,7 @@ package com.example.demo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 @Table(name = "actor")
 public class Actor {
     public Actor() {
+        this.filmsStarringActor = new HashSet<>();
     }
 
     public Actor(int actorID, String firstName, String lastName) {

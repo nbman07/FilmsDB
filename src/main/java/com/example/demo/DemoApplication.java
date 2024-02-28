@@ -283,20 +283,10 @@ public class DemoApplication {
         filmRepo.delete(filmRepo.findById(filmID).orElseThrow());
     }
 
-    // Delete a film
-    @DeleteMapping("delete/film/{title}")
-    public void deleteFilm(@PathVariable("title") String title) {
-        filmRepo.delete(filmRepo.findFilmByTitle(title));
-    }
     // Delete a category given ID
     @DeleteMapping("delete/category/{id}")
     public void deleteCategoryWithID(@PathVariable("id") int categoryID) {
         categoryRepo.delete(categoryRepo.findById(categoryID).orElseThrow());
     }
 
-    // Delete a category
-    @DeleteMapping("delete/category/{name}")
-    public void deleteCategory(@PathVariable("name") String categoryName) {
-        categoryRepo.delete(categoryRepo.findCategoryByCategoryName(categoryName));
-    }
 }
