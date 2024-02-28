@@ -219,14 +219,12 @@ public class DemoApplication {
 
         Set<Film> newListOfFilms;
         try {
-
             newListOfFilms = actor.getFilmsStarringActor();
         } catch (Exception e) {
             System.out.println("List is null.");
             newListOfFilms = new HashSet<Film>();
         }
         newListOfFilms.add(film);
-//        actor.setActorID(205);
         actor.setFilmsStarringActor(newListOfFilms);
 
         actorRepo.save(actor);
@@ -268,16 +266,32 @@ public class DemoApplication {
 
     /******* DELETE MAPPING *******/
 
-    // Delete an actor
+    // Delete an actor given name
     @DeleteMapping("delete/actor/{firstName}/{lastName}")
     public void deleteActor(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
         actorRepo.delete(actorRepo.findByFirstNameAndLastName(firstName, lastName));
+    }
+    // Delete an actor given ID
+    @DeleteMapping("delete/actor/{id}")
+    public void deleteActorWithID(@PathVariable("id")  int actorID) {
+        actorRepo.delete(actorRepo.findById(actorID).orElseThrow());
+    }
+
+    // Delete a film given ID
+    @DeleteMapping("delete/film/{id}")
+    public void deleteFilmWithID(@PathVariable("id") int filmID) {
+        filmRepo.delete(filmRepo.findById(filmID).orElseThrow());
     }
 
     // Delete a film
     @DeleteMapping("delete/film/{title}")
     public void deleteFilm(@PathVariable("title") String title) {
         filmRepo.delete(filmRepo.findFilmByTitle(title));
+    }
+    // Delete a category given ID
+    @DeleteMapping("delete/category/{id}")
+    public void deleteCategoryWithID(@PathVariable("id") int categoryID) {
+        categoryRepo.delete(categoryRepo.findById(categoryID).orElseThrow());
     }
 
     // Delete a category
