@@ -28,6 +28,7 @@ public class CategoryDTO {
         this.name = category.getCategoryName();
         for (Film film : category.getFilmsOfCategory()) {
             FilmDTO filmDTO = new FilmDTO(film, "c");
+            filmDTO.setId(film.getFilmID());
             filmDTO.setTitle(film.getTitle());
             films.add(filmDTO);
         }

@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilmDTO {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private String title;
 
     public void setActors(List<ActorDTO> actors) {

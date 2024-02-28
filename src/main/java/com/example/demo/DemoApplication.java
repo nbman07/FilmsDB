@@ -49,6 +49,8 @@ public class DemoApplication {
         return actorRepo.findById(actorID).
                 orElseThrow(() -> new ResourceAccessException("Actor not found."));
     }
+
+    // Find actor's films
     @GetMapping("/actor/{id}/films")
     public Set<Film> getActorFilmsByID(@PathVariable("id") int actorID) {
         return actorRepo.findById(actorID)
@@ -157,6 +159,7 @@ public class DemoApplication {
         FilmDTO filmDTO = new FilmDTO(film,"c");
         return filmDTO.getCategories();
     }
+
 
     /******* POST MAPPING *******/
 
