@@ -136,6 +136,13 @@ public class DemoApplication {
         return categoryRepo.findCategoryByCategoryID(categoryID);
     }
 
+    // Find categories that contain x in the name
+    @GetMapping("category/search/containing/{name}")
+    public Set<Category> findCategoryByNameContaining(@PathVariable("name") String name) {
+        return categoryRepo.findByCategoryNameContaining(name);
+
+    }
+
     // Find category/categories of a film
     @GetMapping("/film/{id}/categories")
     public List<CategoryDTO> findCategoriesByFilm(@PathVariable("id") int filmID) {
