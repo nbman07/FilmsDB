@@ -116,14 +116,14 @@ public class DemoApplication {
     }
 
     //Find films based on an actor
-    @GetMapping("actor/{id}/films")
-    public List<FilmDTO> findFilmsByActor(@PathVariable("id") int actorID) {
-        final Actor actor = actorRepo.findById(actorID).orElseThrow(() -> new ResourceAccessException("Actor not found with id: " + actorID));
-
-        ActorDTO actorDTO = new ActorDTO(actor);
-//        return (Iterable<ActorDTO>) ResponseEntity.ok(actorDTO);
-        return actorDTO.getFilms();
-    }
+//    @GetMapping("actor/{id}/films")
+//    public List<FilmDTO> findFilmsByActor(@PathVariable("id") int actorID) {
+//        final Actor actor = actorRepo.findById(actorID).orElseThrow(() -> new ResourceAccessException("Actor not found with id: " + actorID));
+//
+//        ActorDTO actorDTO = new ActorDTO(actor);
+////        return (Iterable<ActorDTO>) ResponseEntity.ok(actorDTO);
+//        return actorDTO.getFilms();
+//    }
 
     /******* CATEGORY *******/
 
