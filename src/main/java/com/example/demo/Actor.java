@@ -14,10 +14,11 @@ public class Actor {
         this.filmsStarringActor = new HashSet<>();
     }
 
-    public Actor(int actorID, String firstName, String lastName) {
+    public Actor(int actorID, String firstName, String lastName, Set<Film> filmsStarringActor) {
         this.actorID = actorID;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.filmsStarringActor = filmsStarringActor;
     }
 
     @Id //shows that attribute is primary key
@@ -70,5 +71,4 @@ public class Actor {
             joinColumns = @JoinColumn(name = "actor_id"),
             inverseJoinColumns = @JoinColumn(name = "film_id"))
     Set<Film> filmsStarringActor;
-
 }
