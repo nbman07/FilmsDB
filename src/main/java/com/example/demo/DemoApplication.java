@@ -49,6 +49,12 @@ public class DemoApplication {
         return actorRepo.findById(actorID).
                 orElseThrow(() -> new ResourceAccessException("Actor not found."));
     }
+    @GetMapping("/actor/{id}/films")
+    public Set<Film> getActorFilmsByID(@PathVariable("id") int actorID) {
+        return actorRepo.findById(actorID)
+                        .orElseThrow(() -> new ResourceAccessException("Actor not found."))
+                .getFilmsStarringActor();
+    }
 
     // Find actor given first and last name
     @GetMapping("/actor/search-first-and-last/{firstName}/{lastName}")
